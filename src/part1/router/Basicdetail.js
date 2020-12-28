@@ -1,8 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const mongoose = require('mongoose');
-const multer = require('multer');
-const Basicdetail = require('../models/Basicdetails');
+const mongoose = require("mongoose");
+const multer = require("multer");
+const Basicdetail = require("../models/Basicdetails");
 // const BasicDetail1 = require('../models/Basicdetails1');
 // const BasicDetail2 = require('../models/Basicdetails2');
 // const BasicDetail3 = require('../models/Basicdetails3');
@@ -15,7 +15,6 @@ const Basicdetail = require('../models/Basicdetails');
 //   }
 // });
 
-
 // const storage = multer.diskStorage({
 //     destination: (req, file, callBack) => {
 //         callBack(null, './uploads')
@@ -27,13 +26,12 @@ const Basicdetail = require('../models/Basicdetails');
 // `File_${file.originalname}`
 // const upload = multer({ storage: storage }).single('file')
 
-
 //   const upload = multer({
 //     storage: storage,
 //     limits:{fileSize: 1000000},
 //  }).single("myImage");
 
-router.post('/list-your-property', (req, res, next) => {
+router.post("/list-your-property", (req, res, next) => {
   //  console.log(req.file);
   const user = new Basicdetail({
     _id: new mongoose.Types.ObjectId(),
@@ -51,18 +49,15 @@ router.post('/list-your-property', (req, res, next) => {
   });
   user.save((err, registeredUser) => {
     if (err) {
-      console.log(err)
+      console.log(err);
     } else {
       console.log(registeredUser);
       return res.status(200).json({
-
-        message: "successfully uploaded property details"
+        message: "successfully uploaded property details",
       });
     }
-  })
-
+  });
 });
-
 
 // router.post('/list-your-property1', (req, res, next) => {
 //   console.log(req.file);
@@ -75,7 +70,6 @@ router.post('/list-your-property', (req, res, next) => {
 
 //     rera_id:req.body.rera_id,
 //     rera_url:req.body.rera_url,
-
 
 // Listmy_propertyfor:req.body.Listmy_propertyfor,
 // Available_for:req.body.Available_for,
@@ -135,7 +129,7 @@ router.post('/list-your-property', (req, res, next) => {
 //     });
 // });
 
-router.post('/list-your-property2', (req, res, next) => {
+router.post("/list-your-property2", (req, res, next) => {
   console.log(req.file);
   const user = new BasicDetail2({
     _id: new mongoose.Types.ObjectId(),
@@ -143,25 +137,20 @@ router.post('/list-your-property2', (req, res, next) => {
     state: req.body.state,
     zip: req.body.zip,
     Building_area: req.body.Building_area,
-
-
   });
   user.save((err, registeredUser) => {
     if (err) {
-      console.log(err)
+      console.log(err);
     } else {
       console.log(registeredUser);
       return res.status(200).json({
-
-        message: "successfully uploaded property details"
+        message: "successfully uploaded property details",
       });
     }
-  })
-
+  });
 });
 
-
-router.post('/list-your-property3', (req, res, next) => {
+router.post("/list-your-property3", (req, res, next) => {
   console.log(req.file);
   const user = new BasicDetail3({
     _id: new mongoose.Types.ObjectId(),
@@ -181,21 +170,17 @@ router.post('/list-your-property3', (req, res, next) => {
   });
   user.save((err, registeredUser) => {
     if (err) {
-      console.log(err)
+      console.log(err);
     } else {
       console.log(registeredUser);
       return res.status(200).json({
-
-        message: "successfully uploaded property details"
+        message: "successfully uploaded property details",
       });
     }
-  })
-
+  });
 });
 
-
-
-router.post('/list-your-property5', (req, res, next) => {
+router.post("/list-your-property5", (req, res, next) => {
   console.log(req.file);
   const user = new BasicDetail1({
     _id: new mongoose.Types.ObjectId(),
@@ -203,47 +188,45 @@ router.post('/list-your-property5', (req, res, next) => {
   });
   user.save((err, registeredUser) => {
     if (err) {
-      console.log(err)
+      console.log(err);
     } else {
       console.log(registeredUser);
       return res.status(200).json({
-
-        message: "successfully uploaded property details"
+        message: "successfully uploaded property details",
       });
     }
-  })
-
+  });
 });
 
-router.post('/list-your-property6', (req, res, next) => {
+router.post("/list-your-property6", (req, res, next) => {
   console.log(req.file);
   const user = new BasicDetail6({
     _id: new mongoose.Types.ObjectId(),
     latitude: req.body.latitude,
-    longitude: req.body.longitude
+    longitude: req.body.longitude,
   });
   user.save((err, registeredUser) => {
     if (err) {
-      console.log(err)
+      console.log(err);
     } else {
       console.log(registeredUser);
       return res.status(200).json({
-
-        message: "successfully uploaded property details"
+        message: "successfully uploaded property details",
       });
     }
-  })
-
+  });
 });
 
-router.get('/list-your-property', (req, res, next) => {
+router.get("/list-your-property", (req, res, next) => {
   Basicdetail.find()
-    .select("name email mobile person rera_id rera_url Listmy_propertyfor Available_for Typeof_property Property_status Possession_from")
+    .select(
+      "name email mobile person rera_id rera_url Listmy_propertyfor Available_for Typeof_property Property_status Possession_from"
+    )
     .exec()
-    .then(docs => {
+    .then((docs) => {
       const response = {
         count: docs.length,
-        Basicdetail: docs.map(doc => {
+        Basicdetail: docs.map((doc) => {
           return {
             name: doc.name,
             email: doc.email,
@@ -255,41 +238,40 @@ router.get('/list-your-property', (req, res, next) => {
             Available_for: doc.Available_for,
             Typeof_property: doc.Typeof_property,
             Property_status: doc.Property_status,
-            Possession_from: doc.Possession_from
+            Possession_from: doc.Possession_from,
           };
-        })
+        }),
       };
       if (docs.length >= 0) {
         res.status(200).json(response);
       } else {
         res.status(404).json({
-          message: 'No entries found'
+          message: "No entries found",
         });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.status(500).json({
-        error: err
+        error: err,
       });
     });
 });
 
-
-router.get('/list-your-property/:userId', (req, res, next) => {
+router.get("/list-your-property/:userId", (req, res, next) => {
   const id = req.params.userId;
   Basicdetail.findById(id)
     .select("files")
     .exec()
-    .then(doc => {
+    .then((doc) => {
       console.log("From database", doc);
       if (doc) {
         res.status(200).json({
           Builder: doc,
           request: {
             type: "GET",
-            url: "http://localhost:3000/list-your-property"
-          }
+            url: "http://getrightproperty.com/list-your-property",
+          },
         });
       } else {
         res
@@ -297,14 +279,10 @@ router.get('/list-your-property/:userId', (req, res, next) => {
           .json({ message: "No valid entry found for provided ID" });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.status(500).json({ error: err });
     });
 });
 
-
 module.exports = router;
-
-
-
