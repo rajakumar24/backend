@@ -282,7 +282,7 @@ router.post("/enquiry", async (req, res, next) => {
     const response = await fast2sms.sendMessage({
       authorization: process.env.API_KEY,
       message: message,
-      numbers: ["9513134810"],
+      numbers: ["8088837044"],
     });
     res.send(response);
 
