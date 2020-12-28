@@ -1,16 +1,16 @@
 //
-require('dotenv').config();
+require("dotenv").config();
 
-const fast2sms = require('fast-two-sms')
-const multipart = require('connect-multiparty');
-const cloudinary = require('cloudinary');
-const Datastore = require('nedb');
-const Pusher = require('pusher');
-var nodemailer = require('nodemailer');
+const fast2sms = require("fast-two-sms");
+const multipart = require("connect-multiparty");
+const cloudinary = require("cloudinary");
+const Datastore = require("nedb");
+const Pusher = require("pusher");
+var nodemailer = require("nodemailer");
 //
-const path = require('path');
-const multer = require('multer');
-const sharp = require('sharp');
+const path = require("path");
+const multer = require("multer");
+const sharp = require("sharp");
 const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
@@ -24,30 +24,30 @@ const validatePropertyInput = require("../validation/property");
 
 //
 var transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   //smtp.gmail.com  //in place of service use host...
 
   auth: {
-      user: process.env.EMAIL,
-      pass: process.env.PASSWORD
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD,
   },
   secure: false,
   tls: {
-      rejectUnauthorized: false
-  }
+    rejectUnauthorized: false,
+  },
 });
 //
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads');
+    cb(null, "uploads");
   },
   filename: (req, file, cb) => {
     console.log(file);
     cb(null, Date.now() + path.extname(file.originalname));
-  }
+  },
 });
 
-const upload = multer({ storage: storage })
+const upload = multer({ storage: storage });
 //
 // const db = new Datastore();
 // const multipartMiddleware = multipart();
@@ -68,14 +68,13 @@ const upload = multer({ storage: storage })
 // });
 
 // Get images from database
-router.get('/getImages', (req, res) => {
+router.get("/getImages", (req, res) => {
   db.find({}, (err, data) => {
     if (err) return res.status(500).send(err);
 
     res.json(data);
   });
 });
-
 
 // router.post('/upload', multipartMiddleware, (req, res) => {
 //   // Upload image
@@ -99,26 +98,28 @@ router.get('/getImages', (req, res) => {
 //     });
 //   });
 // });
-router.post('/upload', upload.single('image'), async (req, res, next) => {
-  const qww = req.file.originalname
-  let fileName = req.file.originalname + '.jpg';
-  let imagePath = path.join(__dirname, '../', 'public', 'images', fileName);
+router.post("/upload", upload.single("image"), async (req, res, next) => {
+  const qww = req.file.originalname;
+  let fileName = req.file.originalname + ".jpg";
+  let imagePath = path.join(__dirname, "../", "public", "images", fileName);
   try {
-    await sharp(req.file.path).resize(600, 400).jpeg({
-      quality: 80,
-      chromaSubsampling: '4:4:4'
-    })
+    await sharp(req.file.path)
+      .resize(600, 400)
+      .jpeg({
+        quality: 80,
+        chromaSubsampling: "4:4:4",
+      })
       .toFile(imagePath, (err, resizeImage) => {
         if (err) {
           console.log(err);
         } else {
           console.log(resizeImage);
         }
-      })
+      });
     return res.status(201).json({
-      message: 'File uploded successbvbnbfully', fileName
+      message: "File uploded successbvbnbfully",
+      fileName,
     });
-
   } catch (error) {
     console.error(error);
   }
@@ -146,7 +147,7 @@ router.post(
       address: req.body.address,
       mapLocation: {
         lat: req.body.lat,
-        lng: req.body.lng
+        lng: req.body.lng,
       },
       country: req.body.country,
       state: req.body.state,
@@ -168,13 +169,13 @@ router.post(
         fireplace: req.body.fireplace ? true : false,
         toaster: req.body.toaster ? true : false,
         tennis: req.body.tennis ? true : false,
-        tv: req.body.tv ? true : false
+        tv: req.body.tv ? true : false,
       },
       approve: req.body.approve,
       question: req.body.question,
       answer: req.body.answer,
       reviewTitle: req.body.reviewTitle,
-      reviewDes: req.body.reviewDes
+      reviewDes: req.body.reviewDes,
       //   obej:[{
       //     answer: req.body.answer,
       //     question: req.body.question
@@ -220,7 +221,7 @@ router.post(
       address: req.body.address,
       mapLocation: {
         lat: req.body.lat,
-        lng: req.body.lng
+        lng: req.body.lng,
       },
       country: req.body.country,
       state: req.body.state,
@@ -242,9 +243,9 @@ router.post(
         fireplace: req.body.fireplace ? true : false,
         toaster: req.body.toaster ? true : false,
         tennis: req.body.tennis ? true : false,
-        tv: req.body.tv ? true : false
+        tv: req.body.tv ? true : false,
       },
-      approve: req.body.approve
+      approve: req.body.approve,
     };
 
     const property = await Property.findOne({ title: PropertyDetails.title });
@@ -264,54 +265,65 @@ router.post(
 );
 //add
 
-router.post(
-  "/enquiry",
-  async (req, res, next) => {
-    try {
+router.post("/enquiry", async (req, res, next) => {
+  try {
     const enquiryDetails = {
       nameEnquiry: req.body.nameEnquiry,
       emailEnquiry: req.body.emailEnquiry,
       mobileEnquiry: req.body.mobileEnquiry,
     };
-    const message = "Hello! " + `${enquiryDetails.nameEnquiry}` + " has requested to call back. Please Contact at mailId " + `${enquiryDetails.emailEnquiry}` + " & Contact " + `${enquiryDetails.mobileEnquiry}`
-    const response = await fast2sms.sendMessage({ authorization: process.env.API_KEY, message: message, numbers: ["9064057801"] })
-    res.send(response)
+    const message =
+      "Hello! " +
+      `${enquiryDetails.nameEnquiry}` +
+      " has requested to call back. Please Contact at mailId " +
+      `${enquiryDetails.emailEnquiry}` +
+      " & Contact " +
+      `${enquiryDetails.mobileEnquiry}`;
+    const response = await fast2sms.sendMessage({
+      authorization: process.env.API_KEY,
+      message: message,
+      numbers: ["9513134810"],
+    });
+    res.send(response);
 
     var mailOptions = {
       from: process.env.EMAIL,
       to: req.body.emailEnquiry,
-      subject: 'Lead',
-      html: "<h1>Welcome To Get Right Property ! </h1><p>\
-      <h3>Hello "+req.body.nameEnquiry+"</h3>\
+      subject: "Lead",
+      html:
+        "<h1>Welcome To Get Right Property ! </h1><p>\
+      <h3>Hello " +
+        req.body.nameEnquiry +
+        "</h3>\
       Thank You for requesting call back with Us. <br/>\
       Our Admin will contact you shortly! \
-      </p>"
-  };
-  const responses = await transporter.sendMail(mailOptions, function (error, info) {
-    if (error) {
-        console.log(error);
-    } else {
-      res.send(responses)        // User.updateOne({email: userData.email}, {
-        //     token: currentDateTime, 
-            
-        // },  {multi:true},function(err, affected, resp) {
-            return res.status(200).json({
-                success: false,
-                msg: info.response,
-                userlist: resp
-            });
-          
-        // })
-    }
-});
-} catch (err) {
-  next(err);
-}
-  }
-  
-);
-//add
+      </p>",
+    };
+    const responses = await transporter.sendMail(
+      mailOptions,
+      function (error, info) {
+        if (error) {
+          console.log(error);
+        } else {
+          res.send(responses); // User.updateOne({email: userData.email}, {
+          //     token: currentDateTime,
 
+          // },  {multi:true},function(err, affected, resp) {
+          return res.status(200).json({
+            success: false,
+            msg: info.response,
+            userlist: resp,
+          });
+
+          // })
+        }
+      }
+    );
+  } catch (err) {
+    next(err);
+  }
+});
+//add
 
 //update property
 //@Route /api/property/update
@@ -351,8 +363,8 @@ router.post(
         fireplace: req.body.fireplace ? true : false,
         toaster: req.body.toaster ? true : false,
         tennis: req.body.tennis ? true : false,
-        tv: req.body.tv ? true : false
-      }
+        tv: req.body.tv ? true : false,
+      },
     };
 
     console.log("new data", PropertyDetails);
@@ -377,8 +389,7 @@ router.post(
 
 //add
 // router.put('/api/property/:id', function (req, res) {
-router.put('/:id', function (req, res) {
-
+router.put("/:id", function (req, res) {
   const id = req.body.id;
 
   const PropertyDetails = {
@@ -407,13 +418,13 @@ router.put('/:id', function (req, res) {
       fireplace: req.body.fireplace ? true : false,
       toaster: req.body.toaster ? true : false,
       tennis: req.body.tennis ? true : false,
-      tv: req.body.tv ? true : false
+      tv: req.body.tv ? true : false,
     },
     approve: req.body.approve,
     question: req.body.question,
     answer: req.body.answer,
     reviewDes: req.body.reviewDes,
-    reviewTitle: req.body.reviewTitle
+    reviewTitle: req.body.reviewTitle,
     //   obej:[{
     //     answer: req.body.answer,
     //     question: req.body.question
@@ -422,18 +433,22 @@ router.put('/:id', function (req, res) {
   };
 
   console.log("id", PropertyDetails);
-  Property.findByIdAndUpdate(id, { $set: PropertyDetails }, { new: true }, (error, data) => {
-    if (error) {
-      return next(error);
-      console.log(error);
-    } else {
-      res.json(data)
+  Property.findByIdAndUpdate(
+    id,
+    { $set: PropertyDetails },
+    { new: true },
+    (error, data) => {
+      if (error) {
+        return next(error);
+        console.log(error);
+      } else {
+        res.json(data);
+      }
     }
-
-  });
+  );
 });
 
-router.post('/:id', (req, res, next) => {
+router.post("/:id", (req, res, next) => {
   try {
     const id = req.body.id;
     const PropertyDetails = {
@@ -454,19 +469,22 @@ router.post('/:id', (req, res, next) => {
       // baths: req.body.baths,
       // area: req.body.area,
       // answer: req.body.answer,
-      question: req.body.question
-
+      question: req.body.question,
     };
     // const property1 = Property.findOne({ title: PropertyDetails.title });
     const property = Property.findById({ _id: id });
     if (property) {
-      const newProperty = Property(PropertyDetails).save()
-        .then(res => { console.log("Saved ::") })
-        .catch(err => { console.log("Error", err) })
+      const newProperty = Property(PropertyDetails)
+        .save()
+        .then((res) => {
+          console.log("Saved ::");
+        })
+        .catch((err) => {
+          console.log("Error", err);
+        });
       res
         .status(200)
         .send({ newProperty, msg: "property added successfully!" });
-
     } else {
       return res
         .status(400)
@@ -475,9 +493,7 @@ router.post('/:id', (req, res, next) => {
   } catch (ex) {
     console.log("Error ::", ex);
   }
-
 });
-
 
 // for question in propertyPage
 // router.put('/api/property/:id', function (req, res) {
@@ -583,7 +599,7 @@ router.get("/all", async (req, res) => {
 router.get("/:id", async (req, res) => {
   if (mongoose.Types.ObjectId.isValid(req.params.id)) {
     const propertyDetail = await Property.findOne({
-      _id: req.params.id
+      _id: req.params.id,
     }).populate("user", ["-password"]);
     console.log(propertyDetail);
 
@@ -602,7 +618,7 @@ router.get("/:id", async (req, res) => {
 router.get("/", async (req, res) => {
   if (req.query.filter === "rent" || req.query.filter === "sale") {
     const totalCount = await Property.find({
-      status: req.query.filter
+      status: req.query.filter,
     }).countDocuments();
     res.status(200).send({ totalCount: totalCount });
   }
